@@ -34,10 +34,15 @@ public class OperationsExercise
     public void canFindTheNameOfTheShortestTrackByLedZeppelin()
     {
         // TODO: find the name of the shortest track by Led Zeppelin
-
+/*
         Maybe<String> names = tracks.filter(t-> t.getArtist().equals(Tracks.LED_ZEPPELIN))
                 .sorted(Comparator.comparingInt(Track::getLengthInSeconds))
                 .elementAt(0)
+                .map(Track::getName);*/
+
+
+        Maybe<String> names = tracks.filter(t-> t.getArtist().equals(Tracks.LED_ZEPPELIN))
+                .reduce((acc, track) -> track.getLengthInSeconds() > acc.getLengthInSeconds() ? acc : track)
                 .map(Track::getName);
 
         names.test().assertResult("Rock and Roll");
