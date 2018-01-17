@@ -13,8 +13,13 @@ public class TestingExercise
         final Flowable<Track> beatlesTracks = Flowable.fromArray(Tracks.allTracks)
             .filter(track -> track.getArtist().equals(Tracks.THE_BEATLES));
 
+
         // TODO: 1. Assert that beatlesTracks only value is Tracks.letItBe
         // TODO: 2. Assert that beatlesTracks has emitted the complete event
+
+        beatlesTracks.test().assertResult(Tracks.letItBe);
+        beatlesTracks.test().assertTerminated();
+
     }
 
     @Test
@@ -27,5 +32,9 @@ public class TestingExercise
 
         // TODO: 1. Assert that ledZeppelinTracks has 4 values
         // TODO: 2. Assert that someone has subscribed to ledZeppelinTracks
+
+        ledZeppelinTracks.test().assertValueCount(4);
+        ledZeppelinTracks.test().assertSubscribed();
+
     }
 }
