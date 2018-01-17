@@ -1,25 +1,24 @@
 package com.iteratrlearning.problems.reactive_streams;
 
+import com.iteratrlearning.examples.reactive_streams.Track;
 import com.iteratrlearning.examples.reactive_streams.Tracks;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore // TODO: remove Ignore
+import java.util.Comparator;
+
 public class OperationsExercise
 {
 
-    // The tracks can be found in the field:
-    // com.iteratrlearning.examples.reactive_streams.old.Tracks.allTracks
+    private final Flowable<Track> tracks = Flowable.fromArray((Tracks.allTracks));
 
     @Test
     public void canFindAllArtistsWithTracksOver200Seconds()
     {
         // TODO: find all artist names with tracks longer than 200 seconds.
-        final Flowable<String> names = null;
-
+        Flowable<String> names = tracks.filter(t -> t.getLengthInSeconds() > 200).map(Track::getArtist).distinct();
         names.test().assertResult(Tracks.LED_ZEPPELIN, Tracks.THE_BEATLES);
     }
 
@@ -27,8 +26,7 @@ public class OperationsExercise
     public void isThereATrackByPinkFloyd()
     {
         // TODO: check if there is a track by pink floyd
-        final Single<Boolean> names = null;
-
+        final Single<Boolean> names =   tracks.any(t -> t.getArtist().equals(Tracks.PINK_FLOYD));
         names.test().assertResult(true);
     }
 
@@ -36,7 +34,11 @@ public class OperationsExercise
     public void canFindTheNameOfTheShortestTrackByLedZeppelin()
     {
         // TODO: find the name of the shortest track by Led Zeppelin
-        final Maybe<String> names = null;
+
+        Maybe<String> names = tracks.filter(t-> t.getArtist().equals(Tracks.LED_ZEPPELIN))
+                .sorted(Comparator.comparingInt(Track::getLengthInSeconds))
+                .elementAt(0)
+                .map(Track::getName);
 
         names.test().assertResult("Rock and Roll");
     }
